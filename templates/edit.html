@@ -1,0 +1,113 @@
+{%extends "layout.html"%}
+
+{% block body %}
+<!-- Page Header -->
+<header class="masthead" id="header" style="background-image: url('{{ url_for('static', filename='assets/img/post-bg3.jpeg') }}'); background-size: cover; opacity: 1; transition: opacity 1s;">
+    <div class="container position-relative px-4 px-lg-5 text-center text-white">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="site-heading">
+                    <h1>Digital Frontier</h1>
+                    <span class="subheading">Exploring the Future of AI, Tech, and Innovation</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script>
+    // Wait for the DOM to be fully loaded before running the script
+    document.addEventListener('DOMContentLoaded', function () {
+        // List of background images for the slideshow
+        const images = [
+            '{{ url_for('static', filename='assets/img/home-bg1.jpeg') }}',
+            '{{ url_for('static', filename='assets/img/home-bg2.jpg') }}',
+            '{{ url_for('static', filename='assets/img/home-bg3.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg3.jpeg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg2.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg1.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg4.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg7.jpg') }}',
+
+            
+        ];
+
+        let currentImageIndex = 0;
+        const headerElement = document.getElementById('header');
+
+        // Function to change background image
+        function changeBackgroundImage() {
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            headerElement.style.opacity = 40;  // Start fading out
+            setTimeout(function () {
+                headerElement.style.backgroundImage = `url(${images[currentImageIndex]})`;
+                headerElement.style.opacity = 1;  // Fade in the new background
+            }, 300);  // Delay to match the fade-out transition
+        }
+
+        // Change background image every 5 seconds
+        setInterval(changeBackgroundImage, 5000);
+    });
+</script>
+
+<!-- Main Content -->
+<div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+
+            <div class="text-center mb-4">
+                {% if post is none %}
+                    <h2 class="fw-bold text-uppercase">Add Post</h2>
+                {% else %}
+                    <h2 class="fw-bold text-uppercase">Edit Post</h2>
+                {% endif %}
+                <hr class="my-4">
+            </div>
+
+            <form id="postForm" action="/edit/{{sno}}" method="post" class="p-4 shadow-sm rounded bg-white">
+                
+                <div class="mb-3">
+                    <label for="title" class="form-label fw-bold">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" required value="{{post.title}}" placeholder="Enter title...">
+                </div>
+
+                <div class="mb-3">
+                    <label for="subtitle" class="form-label fw-bold">Subtitle</label>
+                    <input type="text" class="form-control" id="subtitle" name="subtitle" required value="{{post.subtitle}}" placeholder="Enter subtitle...">
+                </div>
+
+                <div class="mb-3">
+                    <label for="slug" class="form-label fw-bold">Slug</label>
+                    <input type="text" class="form-control" id="slug" name="slug" required value="{{post.slug}}" placeholder="Enter a unique slug...">
+                </div>
+
+                <div class="mb-3">
+                    <label for="content" class="form-label fw-bold">Content</label>
+                    <textarea class="form-control" id="content" name="content" rows="6" required placeholder="Write your content here...">{{post.content}}</textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label for="category" class="form-label fw-bold">Category</label>
+                    <select class="form-select" id="category" name="category" required>
+                        <option value="Technology" {% if post and post.category == "Technology" %}selected{% endif %}>Technology</option>
+                        <option value="Computer Science" {% if post and post.category == "Computer Science" %}selected{% endif %}>Computer Science</option>
+                        <option value="Data Science" {% if post and post.category == "Data Science" %}selected{% endif %}>Data Science</option>
+                        <option value="Artificial Intelligence" {% if post and post.category == "Artificial Intelligence" %}selected{% endif %}>Artificial Intelligence</option>
+                        <option value="Cyber Security" {% if post and post.category == "Cyber Security" %}selected{% endif %}>Cyber Security</option>
+                        <option value="Fin-Tech" {% if post and post.category == "Fin-Tech" %}selected{% endif %}>Fin-Tech</option>
+                        <option value="Others" {% if post and post.category == "Others" %}selected{% endif %}>Others</option>
+                    </select>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid">
+                    <button class="btn btn-primary text-uppercase py-2 fw-bold" type="submit">Submit</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

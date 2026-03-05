@@ -1,0 +1,15 @@
+{
+    "params":
+    {
+        "X_URL":"",
+        "github_URL":"",
+        "linkedin_URL":"",
+        "blog_name":"Digital_Frontier",  
+        "local_server":true,
+        "local_uri":"sqlite:///mydatabase.db",
+        "production_uri":"production_uri",
+        "no_of_posts":20,
+        "admin_username":"xyz",
+        "admin_password":"123"
+    }
+}

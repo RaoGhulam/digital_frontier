@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<!-- Page Header -->
+<header class="masthead" id="header" style="background-image: url('{{ url_for('static', filename='assets/img/post-bg8.jpeg') }}'); background-size: cover; opacity: 1; transition: opacity 1s;">
+    <div class="container position-relative px-4 px-lg-5 text-center text-white">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="site-heading">
+                    <h1>Digital Frontier</h1>
+                    <span class="subheading">Exploring the Future of AI, Tech, and Innovation</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script>
+    // Wait for the DOM to be fully loaded before running the script
+    document.addEventListener('DOMContentLoaded', function () {
+        // List of background images for the slideshow
+        const images = [
+            '{{ url_for('static', filename='assets/img/home-bg1.jpeg') }}',
+            '{{ url_for('static', filename='assets/img/home-bg2.jpg') }}',
+            '{{ url_for('static', filename='assets/img/home-bg3.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg3.jpeg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg2.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg1.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg4.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg7.jpg') }}',
+
+            
+        ];
+
+        let currentImageIndex = 0;
+        const headerElement = document.getElementById('header');
+
+        // Function to change background image
+        function changeBackgroundImage() {
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            headerElement.style.opacity = 40;  // Start fading out
+            setTimeout(function () {
+                headerElement.style.backgroundImage = `url(${images[currentImageIndex]})`;
+                headerElement.style.opacity = 1;  // Fade in the new background
+            }, 300);  // Delay to match the fade-out transition
+        }
+
+        // Change background image every 5 seconds
+        setInterval(changeBackgroundImage, 5000);
+    });
+</script>
+
+
+<!-- Main Content -->
+<div class="container px-4 px-lg-5 mt-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+            
+            <h2 class="mb-4 text-primary">User Management</h2>
+            <hr>
+
+            {% if users %}
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle">
+                    <thead style="background-color: #0085A1; color: white;">
+                        <tr>
+                            <th>Username</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.user_name }}</td>
+                            <td class="text-center">
+                                <a href="{{ url_for('dashboard', action='remove_user', username=user.user_name) }}" 
+                                   class="btn btn-danger btn-sm"
+                                   onclick="return confirm('Are you sure you want to remove {{ user.user_name }}?');">
+                                    <i class="fas fa-user-minus"></i> Remove
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+                <p class="text-muted">No users found.</p>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

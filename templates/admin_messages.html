@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<!-- Page Header -->
+<header class="masthead" id="header" style="background-image: url('{{ url_for('static', filename='assets/img/post-bg1.jpg') }}'); background-size: cover; opacity: 1; transition: opacity 1s;">
+    <div class="container position-relative px-4 px-lg-5 text-center text-white">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="site-heading">
+                    <h1>Digital Frontier</h1>
+                    <span class="subheading">Exploring the Future of AI, Tech, and Innovation</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script>
+    // Wait for the DOM to be fully loaded before running the script
+    document.addEventListener('DOMContentLoaded', function () {
+        // List of background images for the slideshow
+        const images = [
+            '{{ url_for('static', filename='assets/img/home-bg1.jpeg') }}',
+            '{{ url_for('static', filename='assets/img/home-bg2.jpg') }}',
+            '{{ url_for('static', filename='assets/img/home-bg3.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg3.jpeg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg2.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg1.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg4.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg7.jpg') }}',
+
+            
+        ];
+
+        let currentImageIndex = 0;
+        const headerElement = document.getElementById('header');
+
+        // Function to change background image
+        function changeBackgroundImage() {
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            headerElement.style.opacity = 40;  // Start fading out
+            setTimeout(function () {
+                headerElement.style.backgroundImage = `url(${images[currentImageIndex]})`;
+                headerElement.style.opacity = 1;  // Fade in the new background
+            }, 300);  // Delay to match the fade-out transition
+        }
+
+        // Change background image every 5 seconds
+        setInterval(changeBackgroundImage, 5000);
+    });
+</script>
+
+<!-- Contact Messages Table -->
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-12 col-lg-10">
+            <!-- <h3 class="mb-4 fw-semibold text-center" style="color: #0085A1;">📩 Contact Messages</h3> -->
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle shadow-sm">
+                    <thead class="text-white" style="background-color: #0085A1;">
+                        <tr class="text-center">
+                            <th style="width: 15%;">Name</th>
+                            <th style="width: 20%;">📧 Email</th>
+                            <th style="width: 15%;">📞 Phone</th>
+                            <th style="width: 35%;">📝 Message</th>
+                            <th style="width: 15%;">📅 Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if messages %}
+                            {% for message in messages %}
+                            <tr class="table-light">
+                                <td class="align-top fw-semibold">{{ message.name }}</td>
+                                <td class="align-top">
+                                    <a href="mailto:{{ message.email }}" class="text-decoration-none" style="color: #0085A1; font-weight: 500;">
+                                        {{ message.email }}
+                                    </a>
+                                </td>
+                                <td class="align-top">{{ message.phone_num }}</td>
+                                <td class="align-top">{{ message.mes }}</td> <!-- Full message visible -->
+                                <td class="align-top text-nowrap">{{ message.date.strftime('%Y-%m-%d %H:%M') }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-3">No messages found</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

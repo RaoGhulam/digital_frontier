@@ -1,0 +1,102 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<!-- Page Header -->
+<header class="masthead" id="header" style="background-image: url('{{ url_for('static', filename='assets/img/post-bg4.jpg') }}'); background-size: cover; opacity: 1; transition: opacity 1s;">
+    <div class="container position-relative px-4 px-lg-5 text-center text-white">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="site-heading">
+                    <h1>Digital Frontier</h1>
+                    <span class="subheading">Exploring the Future of AI, Tech, and Innovation</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script>
+    // Wait for the DOM to be fully loaded before running the script
+    document.addEventListener('DOMContentLoaded', function () {
+        // List of background images for the slideshow
+        const images = [
+            '{{ url_for('static', filename='assets/img/home-bg1.jpeg') }}',
+            '{{ url_for('static', filename='assets/img/home-bg2.jpg') }}',
+            '{{ url_for('static', filename='assets/img/home-bg3.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg3.jpeg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg2.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg1.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg4.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg7.jpg') }}',
+
+            
+        ];
+
+        let currentImageIndex = 0;
+        const headerElement = document.getElementById('header');
+
+        // Function to change background image
+        function changeBackgroundImage() {
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            headerElement.style.opacity = 40;  // Start fading out
+            setTimeout(function () {
+                headerElement.style.backgroundImage = `url(${images[currentImageIndex]})`;
+                headerElement.style.opacity = 1;  // Fade in the new background
+            }, 300);  // Delay to match the fade-out transition
+        }
+
+        // Change background image every 5 seconds
+        setInterval(changeBackgroundImage, 5000);
+    });
+</script>
+
+
+<!-- Main Content -->
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+            
+            <h2 class="mb-4 text-center">Pending Posts</h2>
+
+            {% if posts %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Date</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for post in posts %}
+                                <tr>
+                                    <td><a href="{{ url_for('post_route', post_slug=post.slug) }}" class="fw-bold text-decoration-none">{{ post.title }}</a></td>
+                                    <td>{{ post.author }}</td>
+                                    <td>{{ post.date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                    <td class="text-center">
+                                        <a href="{{ url_for('dashboard', action='approve_post', sno=post.sno) }}" class="btn btn-success btn-sm" onclick="return confirm('Are you sure you want to approve this post?');">
+                                            ✔️ Approve
+                                        </a>
+                                        <a href="{{ url_for('delete', action='delete_pending_post', sno=post.sno) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this post?');">
+                                            ❌ Delete
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info text-center">
+                    No pending posts at the moment.
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

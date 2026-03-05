@@ -1,0 +1,162 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<!-- Page Header -->
+<header class="masthead" id="header" style="background-image: url('{{ url_for('static', filename='assets/img/post-bg5.jpg') }}'); background-size: cover; opacity: 1; transition: opacity 1s;">
+    <div class="container position-relative px-4 px-lg-5 text-center text-white">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="site-heading">
+                    <h1>Digital Frontier</h1>
+                    <span class="subheading">Exploring the Future of AI, Tech, and Innovation</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script>
+    // Wait for the DOM to be fully loaded before running the script
+    document.addEventListener('DOMContentLoaded', function () {
+        // List of background images for the slideshow
+        const images = [
+            '{{ url_for('static', filename='assets/img/home-bg1.jpeg') }}',
+            '{{ url_for('static', filename='assets/img/home-bg2.jpg') }}',
+            '{{ url_for('static', filename='assets/img/home-bg3.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg3.jpeg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg2.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg1.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg4.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg7.jpg') }}',
+
+            
+        ];
+
+        let currentImageIndex = 0;
+        const headerElement = document.getElementById('header');
+
+        // Function to change background image
+        function changeBackgroundImage() {
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            headerElement.style.opacity = 40;  // Start fading out
+            setTimeout(function () {
+                headerElement.style.backgroundImage = `url(${images[currentImageIndex]})`;
+                headerElement.style.opacity = 1;  // Fade in the new background
+            }, 300);  // Delay to match the fade-out transition
+        }
+
+        // Change background image every 5 seconds
+        setInterval(changeBackgroundImage, 5000);
+    });
+</script>
+
+
+
+<!-- Post Metadata (Details Below Header) -->
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7 text-center p-3 border-bottom">
+            <h2 class="mb-1">{{ post.title }}</h2>
+            <h5 class="text-muted">{{ post.subtitle }}</h5>
+            <p class="text-muted mt-2">
+                <strong>Posted by:</strong> {{ post.author }} | 
+                <strong>Category:</strong> {{ post.category }} <br>
+                <i class="far fa-calendar-alt"></i> {{  post.date.strftime('%Y-%m-%d')}}
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Post Content -->
+<article class="mb-5">
+    <div class="container px-4 px-lg-5">
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="post-content">
+                    {{ post.content | safe }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Like & Dislike Section -->
+        <div class="row justify-content-start mt-4">
+            <div class="col-md-10 col-lg-8 col-xl-7 d-flex align-items-center gap-3">
+                {% if session.get('user') %}
+                    <form action="/like_dislike/{{ post.sno }}/like" method="post">
+                        <button type="submit" class="btn btn-sm btn-outline-success">
+                            👍 ({{ likes }})
+                        </button>
+                    </form>
+
+                    <form action="/like_dislike/{{ post.sno }}/dislike" method="post">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                            👎 ({{ dislikes }})
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="/login?next=/post/{{ post.slug }}" class="btn btn-sm btn-outline-success">
+                        👍 ({{ likes }})
+                    </a>
+                    <a href="/login?next=/post/{{ post.slug }}" class="btn btn-sm btn-outline-danger">
+                        👎 ({{ dislikes }})
+                    </a>
+                {% endif %}
+            </div>
+
+            {% if not session.get('user') %}
+                <p class="mt-1 text-muted" style="font-size: 0.85rem;">
+                    <a href="/login?next=/post/{{ post.slug }}">Login</a> to like or dislike this post.
+                </p>
+            {% endif %}
+        </div>
+
+        <hr class="mt-5">
+
+        <!-- Comments Section -->
+        <div class="mt-5">
+            <h3 class="mb-4">Comments</h3>
+
+            {% if comments %}
+                {% for comment in comments %}
+                    <div class="border rounded p-3 mb-3 bg-light">
+                        <h6 class="mb-1 text-primary">
+                            <i class="fas fa-user-circle"></i> {{ comment.user.user_name }}
+                        </h6>
+                        <p class="mb-1">{{ comment.content }}</p>
+                        <small class="text-muted">
+                            <i class="far fa-clock"></i> {{ comment.date.strftime('%Y-%m-%d %H:%M:%S') }}
+                        </small>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted">No comments yet. Be the first to comment!</p>
+            {% endif %}
+
+            <hr>
+
+            <!-- Comment Form -->
+            {% if session.get('user') %}
+                <div class="mt-4">
+                    <h5 class="mb-3">Leave a Comment</h5>
+                    <form action="/comment/{{ post.sno }}" method="POST">
+                        <div class="mb-3">
+                            <textarea name="comment" class="form-control" rows="3" 
+                                      placeholder="Write your comment here..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Submit Comment
+                        </button>
+                    </form>
+                </div>
+            {% else %}
+                <p class="mt-2 text-muted" style="font-size: 0.85rem;">
+                    <a href="/login?next=/post/{{ post.slug }}">Login</a> to post a comment.
+                </p>
+            {% endif %}
+        </div>
+
+    </div>
+</article>
+
+{% endblock %}

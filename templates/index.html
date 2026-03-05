@@ -1,0 +1,228 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<!-- Page Header -->
+<header class="masthead" id="header" style="background-image: url('{{ url_for('static', filename='assets/img/home-bg.jpg') }}'); background-size: cover; opacity: 1; transition: opacity 1s;">
+    <div class="container position-relative px-4 px-lg-5 text-center text-white">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="site-heading">
+                    <h1>Digital Frontier</h1>
+                    <span class="subheading">Exploring the Future of AI, Tech, and Innovation</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script>
+    // Wait for the DOM to be fully loaded before running the script
+    document.addEventListener('DOMContentLoaded', function () {
+        // List of background images for the slideshow
+        const images = [
+            '{{ url_for('static', filename='assets/img/home-bg1.jpeg') }}',
+            '{{ url_for('static', filename='assets/img/home-bg2.jpg') }}',
+            '{{ url_for('static', filename='assets/img/home-bg3.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg3.jpeg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg2.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg1.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg4.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg7.jpg') }}',
+
+            
+        ];
+
+        let currentImageIndex = 0;
+        const headerElement = document.getElementById('header');
+
+        // Function to change background image
+        function changeBackgroundImage() {
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            headerElement.style.opacity = 40;  // Start fading out
+            setTimeout(function () {
+                headerElement.style.backgroundImage = `url(${images[currentImageIndex]})`;
+                headerElement.style.opacity = 1;  // Fade in the new background
+            }, 300);  // Delay to match the fade-out transition
+        }
+
+        // Change background image every 5 seconds
+        setInterval(changeBackgroundImage, 5000);
+    });
+</script>
+
+
+<!-- Control Panel (Category Filter, Sorting, Search) -->
+<div class="container my-4">
+    <div class="row align-items-center">
+
+        <!-- Category Filter -->
+        <div class="col-md-4 mb-3">
+            <form method="GET" action="/">
+                <select name="category" class="form-select shadow-sm" onchange="this.form.submit()">
+                    <option value="" disabled selected>Filter by Category</option>
+                    <option value="All">All</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Data Science">Data Science</option>
+                    <option value="Artificial Intelligence">Artificial Intelligence</option>
+                    <option value="Cyber Security">Cyber Security</option>
+                    <option value="Fin-Tech">Fin-Tech</option>
+                    <option value="Others">Others</option>
+                </select>
+            </form>
+        </div>
+
+        <!-- Sorting -->
+        <div class="col-md-4 mb-3">
+            <form method="GET" action="/">
+                <select name="sort_by" class="form-select shadow-sm" onchange="this.form.submit()">
+                    <option value="" disabled selected>Sort By</option>
+                    <option value="latest">Latest</option>
+                    <option value="oldest">Oldest</option>
+                    <option value="likes">Most Liked</option>
+                </select>
+            </form>
+        </div>
+
+        <!-- Search -->
+        <div class="col-md-4 mb-3">
+            <form action="/search" method="POST" class="d-flex">
+                <input class="form-control me-2 shadow-sm" type="search" name="query" placeholder="Search posts..." aria-label="Search">
+                <button class="btn btn-primary shadow-sm" type="submit">Search</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<!-- Create New Post Button -->
+<div class="container text-center mb-4">
+    {% if session.get('user') %}
+        <a href="/edit/0" class="btn px-4 py-2 border border-primary text-primary shadow-sm"
+           style="background-color: transparent; transition: all 0.3s ease;"
+           onmouseover="this.style.backgroundColor='#0085A1'; this.style.color='white';"
+           onmouseout="this.style.backgroundColor='transparent'; this.style.color='#0085A1';">
+            ➕ Create a New Post
+        </a>
+    {% else %}
+        <p class="text-muted small"><a href="/login">Login</a> to create a new post.</p>
+    {% endif %}
+</div>
+
+<!-- Category-Based Image Dictionary -->
+{% set category_images = {
+    "Technology": ["assets/img/categories/tc-1.jpg", "assets/img/categories/tc-2.jpg", "assets/img/categories/tc-3.jpg",
+                   "assets/img/categories/tc-4.jpg", "assets/img/categories/tc-5.jpg", "assets/img/categories/tc-6.jpg",
+                   "assets/img/categories/tc-7.jpg", "assets/img/categories/tc-8.jpg", "assets/img/categories/tc-9.jpg",
+                   "assets/img/categories/tc-10.jpg"],
+    "Computer Science": ["assets/img/categories/cs-1.jpg", "assets/img/categories/cs-2.jpg", "assets/img/categories/cs-3.jpg",
+                         "assets/img/categories/cs-4.jpg", "assets/img/categories/cs-5.jpg", "assets/img/categories/cs-6.jpg",
+                         "assets/img/categories/cs-7.jpg", "assets/img/categories/cs-8.jpg", "assets/img/categories/cs-9.jpg",
+                         "assets/img/categories/cs-10.jpg"],
+    "Data Science": ["assets/img/categories/ds-1.jpg", "assets/img/categories/ds-2.jpg", "assets/img/categories/ds-3.jpg",
+                     "assets/img/categories/ds-4.jpg", "assets/img/categories/ds-5.jpg", "assets/img/categories/ds-6.jpg",
+                     "assets/img/categories/ds-7.jpg", "assets/img/categories/ds-8.jpg", "assets/img/categories/ds-9.jpg",
+                     "assets/img/categories/ds-10.jpg"],
+    "Artificial Intelligence": ["assets/img/categories/ai-1.jpg", "assets/img/categories/ai-2.jpg", "assets/img/categories/ai-3.jpg",
+                                "assets/img/categories/ai-4.jpg", "assets/img/categories/ai-5.jpg", "assets/img/categories/ai-6.jpg",
+                                "assets/img/categories/ai-7.jpg", "assets/img/categories/ai-8.jpg", "assets/img/categories/ai-9.jpg",
+                                "assets/img/categories/ai-10.jpg"],
+    "Cyber Security": ["assets/img/categories/cy-1.jpg", "assets/img/categories/cy-2.jpg", "assets/img/categories/cy-3.jpg",
+                       "assets/img/categories/cy-4.jpg", "assets/img/categories/cy-5.jpg", "assets/img/categories/cy-6.jpg",
+                       "assets/img/categories/cy-7.jpg", "assets/img/categories/cy-8.jpg", "assets/img/categories/cy-9.jpg",
+                       "assets/img/categories/cy-10.jpg"],
+    "Fin-Tech": [
+                       "assets/img/categories/fn-1.jpg",
+                       "assets/img/categories/fn-2.jpg",
+                       "assets/img/categories/fn-3.jpg",
+                       "assets/img/categories/fn-4.jpg",
+                       "assets/img/categories/fn-5.jpg"],
+    "Others": [
+                        "assets/img/categories/ot-1.jpg", "assets/img/categories/ot-2.jpg",
+                         "assets/img/categories/ot-3.jpg","assets/img/categories/ot-4.jpg",
+                       "assets/img/categories/ot-5.jpg"],
+} %}
+
+<!-- Posts Section (Stacked Horizontally) -->
+<div class="container">
+    <div class="row row-cols-1 row-cols-md-3 g-4 d-flex flex-row">
+        {% for post in posts.items %}
+            <div class="col">
+                <div class="card shadow-sm border-0 rounded-lg h-100">
+                    
+                    <!-- Assign Image: Uploaded → Category-Based (Unique) -->
+                    {% if post.image %}
+                        {% set image_path = post.image %}
+                    {% elif post.category in category_images %}
+                        {% set image_list = category_images[post.category] %}
+                        {% set image_path = url_for('static', filename=image_list[post.sno % image_list|length]) %}
+                    {% else %}
+                        {% set image_path = url_for('static', filename='assets/img/default.jpg') %}
+                    {% endif %}
+
+                    <img src="{{ image_path }}" class="card-img-top" alt="Post Image" style="height: 200px; object-fit: cover;">
+                    
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ post.title }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ post.subtitle }}</h6>
+                        <p class="card-text text-truncate">{{ post.content[:120] }}...</p>
+                        <p><strong>Category:</strong> {{ post.category }}</p>
+                        <p class="text-muted small">By {{ post.author }} on {{ post.date.strftime('%Y-%m-%d') }}</p>
+                        
+                        <!-- Like / Dislike Counts -->
+                        <div class="mt-3">
+                            <span class="me-3 text-success">👍 {{ post.likes }}</span>
+                            <span class="text-danger">👎 {{ post.dislikes }}</span>
+                        </div>
+
+                          <!-- Comment Count -->
+                          <div class="mt-2 text-secondary">
+                              💬 {{ post.comments|length }} Comments
+                         </div>
+
+
+
+                        <!-- Read More Button -->
+                        <a href="{{ url_for('post_route', post_slug=post.slug) }}" class="btn btn-primary mt-auto">Read More</a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <p class="text-center text-muted">No posts available.</p>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+<!-- Pagination Controls -->
+<div class="container my-4">
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            
+            {% if posts.has_prev %}
+                <li class="page-item">
+                    <a class="page-link shadow-sm" href="{{ url_for('home', page=posts.prev_num) }}">Previous</a>
+                </li>
+            {% endif %}
+
+            {% for num in posts.iter_pages() %}
+                {% if num %}
+                    <li class="page-item {% if num == posts.page %}active{% endif %}">
+                        <a class="page-link shadow-sm" href="{{ url_for('home', page=num) }}">{{ num }}</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link shadow-sm">...</span></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if posts.has_next %}
+                <li class="page-item">
+                    <a class="page-link shadow-sm" href="{{ url_for('home', page=posts.next_num) }}">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+
+{% endblock %}

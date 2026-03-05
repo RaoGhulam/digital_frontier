@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<!-- Page Header -->
+<header class="masthead" id="header" style="background-image: url('{{ url_for('static', filename='assets/img/post-bg7.jpg') }}'); background-size: cover; opacity: 1; transition: opacity 1s;">
+    <div class="container position-relative px-4 px-lg-5 text-center text-white">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="site-heading">
+                    <h1>Digital Frontier</h1>
+                    <span class="subheading">Exploring the Future of AI, Tech, and Innovation</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script>
+    // Wait for the DOM to be fully loaded before running the script
+    document.addEventListener('DOMContentLoaded', function () {
+        // List of background images for the slideshow
+        const images = [
+            '{{ url_for('static', filename='assets/img/home-bg1.jpeg') }}',
+            '{{ url_for('static', filename='assets/img/home-bg2.jpg') }}',
+            '{{ url_for('static', filename='assets/img/home-bg3.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg3.jpeg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg2.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg1.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg4.jpg') }}',
+            '{{ url_for('static', filename='assets/img/post-bg7.jpg') }}',
+
+            
+        ];
+
+        let currentImageIndex = 0;
+        const headerElement = document.getElementById('header');
+
+        // Function to change background image
+        function changeBackgroundImage() {
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            headerElement.style.opacity = 40;  // Start fading out
+            setTimeout(function () {
+                headerElement.style.backgroundImage = `url(${images[currentImageIndex]})`;
+                headerElement.style.opacity = 1;  // Fade in the new background
+            }, 300);  // Delay to match the fade-out transition
+        }
+
+        // Change background image every 5 seconds
+        setInterval(changeBackgroundImage, 5000);
+    });
+</script>
+
+
+<!-- Main Content -->
+<div class="container mt-5 px-4 px-lg-5">
+    <h2 class="fw-bold mb-4">Search Results for "<span class="text-primary">{{ query }}</span>"</h2>
+
+    {% if posts %}
+        <div class="row">
+            {% for post in posts %}
+                <div class="col-md-10 col-lg-8 col-xl-7 mb-4">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body">
+                            <h3 class="card-title">
+                                <a href="/post/{{ post.slug }}" class="text-dark text-decoration-none">
+                                    {{ post.title }}
+                                </a>
+                            </h3>
+                            {% if post.subtitle %}
+                                <p class="card-text text-muted">{{ post.subtitle }}</p>
+                            {% endif %}
+                            <small class="text-muted">
+                                <strong>Category:</strong> {{ post.category }} | 
+                                <i class="far fa-clock"></i> {{ post.date.strftime('%Y-%m-%d') }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning mt-4" role="alert">
+            <i class="fas fa-exclamation-circle"></i> No posts found matching your search. Try refining your keywords.
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}
